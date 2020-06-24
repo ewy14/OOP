@@ -1,0 +1,236 @@
+#include <iostream>
+#include "time.h"
+#include <string>
+#include "windows.h"
+using namespace std;
+
+class Comp {
+protected:
+	int price;
+	string name;
+public:
+	Comp()
+	{
+		name = "";
+		price = 0;
+	}
+	Comp(int price, string name)
+	{
+		this->price = price;
+		this->name = name;
+	}
+	virtual void read()
+	{
+		cout << "Наименование:";
+		cin >> name;
+		cout << "Цена:";
+		cin >> price;
+	}
+	virtual void print()
+	{
+			if (name == "") { throw 1; }
+			else cout << "Название:" << name << endl;
+			if (price == 0) { throw 2; }
+			else cout << "Цена:" << price << endl;
+	}
+	string getName() { return name; }
+	int getPrice() { return price; }
+};
+class MotherBoard : public Comp {
+protected:
+	string socket;
+	int NumOfRam;
+public:
+	MotherBoard() : Comp(price, name)
+	{
+		socket = "";
+		NumOfRam = 0;
+	}
+	MotherBoard(int price, string name, string socket, int NumOfRam) : Comp(price, name)
+	{
+		this->socket = socket;
+		this->NumOfRam = NumOfRam;
+	}
+	virtual void read()
+	{
+		cout << "Сокет:";
+		cin >> socket;
+		cout << "Количество слотов под оперативную память:";
+		cin >> NumOfRam;
+	}
+	virtual void print()
+	{
+		if (name == "") { throw 1; }
+		else cout << "Название:" << name << endl;
+		if (price == 0) { throw 2; }
+		else cout << "Цена:" << price << endl;
+		if (socket == "") { throw 3; }
+		else cout << "Сокет:" << socket << endl;
+		if (NumOfRam == 0) { throw 4; }
+		else cout << "Количество слотов под оперативную память:" << NumOfRam << endl;
+	}
+	string getSocket() { return socket; }
+	int getNumOfRam() { return NumOfRam; }
+};
+class PowerSupply : public Comp {
+protected:
+	int power;
+	string CertificateAvail;
+public:
+	PowerSupply(int price, string name, string CertificateAvail, int power) : Comp(price, name)
+	{
+		this->power = power;
+		this->CertificateAvail = CertificateAvail;
+	}
+	PowerSupply() : Comp(price, name)
+	{
+		CertificateAvail = "";
+		power = 0;
+	}
+	virtual void read()
+	{
+		cout << "Наличие сертификата:";
+		cin >> CertificateAvail;
+		cout << "Мощность:";
+		cin >> power;
+	}
+	virtual void print()
+	{
+		if (name == "") { throw 1; }
+		else cout << "Название:" << name << endl;
+		if (price == 0) { throw 2; }
+		else cout << "Цена:" << price << endl;
+		if (CertificateAvail == "") { throw 5; }
+		else cout << "Наличие сертификата:" << CertificateAvail << endl;
+		if (power == 0) { throw 6; }
+		else cout << "Мощность:" << power << endl;
+	}
+	string getSocket() { return CertificateAvail; }
+	int getNumOfRam() { return power; }
+};
+
+class StorageDevices :public Comp {
+protected:
+	int capacity;
+public:
+	StorageDevices() : Comp(price, name)
+	{
+		capacity = 0;
+	}
+	StorageDevices(int price, string name, int capacity) : Comp(price, name)
+	{
+		this->capacity = capacity;
+	}
+	virtual void read()
+	{
+		cout << "Объем памяти(Гб):";
+		cin >> capacity;
+	}
+	virtual void print()
+	{
+		if (name == "") { throw 1; }
+		else cout << "Название:" << name << endl;
+		if (price == 0) { throw 2; }
+		else cout << "Цена:" << price << endl;
+		if (capacity == 0) { throw 7; }
+		else cout << "Объем памяти(Гб):" << capacity << endl;
+		
+	}
+	int getCapacity() { return capacity; }
+};
+class HDD : public Comp, public StorageDevices {
+protected:
+	int speed;
+	int price1;
+	string name1;
+public:
+	HDD(int price, string name, int capacity, int speed) : StorageDevices(price, name, capacity)
+	{
+		this->speed = speed;
+		this->price1 = price;
+		this->name1 = name;
+	}
+	HDD() : StorageDevices()
+	{
+		speed = 0;
+	}
+	virtual void read()
+	{
+		cout << "Наименование:";
+		cin >> name1;
+		cout << "Цена:";
+		cin >> price1;
+		cout << "Объем памяти(Гб):";
+		cin >> capacity;
+		cout << "Скорость вращения:";
+		cin >> speed;
+	}
+	virtual void print()
+	{
+		if (name1 == "") { throw 1; }
+		else cout << "Название:" << name1 << endl;
+		if (price1 == 0) { throw 2; }
+		else cout << "Цена:" << price1 << endl;
+		if (capacity == 0) { throw 7; }
+		else cout << "Объем памяти(Гб):" << capacity << endl;
+		if (speed == 0) { throw 8; }
+		else cout << "Скорость вращения:" << speed << endl;
+	}
+
+};
+int main()
+{
+	setlocale(LC_ALL, "ru");
+
+	MotherBoard a(5890, "Asus as-7980", "LGA1155", 3);
+	PowerSupply b(1999, "AeroCool VX-650", "Отсутствует", 650);
+	HDD c(2599, "Seagate ioiiio", 1000, 7500);
+	try {
+		a.print();
+		cout << endl;
+		b.print();
+		cout << endl;
+		c.print();
+		cout << endl;
+	}
+	catch (int o) {
+		switch (o) {
+		case 1: {
+			cout << "Не введено название" << endl;
+			break;
+		}
+		case 2: {
+			cout << "Не введена цена оборудования" << endl;
+			break;
+		}
+		case 3: {
+			cout << "Не введен сокет" << endl;
+			break;
+		}
+		case 4: {
+			cout << "Не введено количество слотов под оперативную память" << endl;
+			break;
+		}
+		case 5: {
+			cout << "Не введено наличие сертификата" << endl;
+			break;
+		}
+		case 6: {
+			cout << "Не введена мощность" << endl;
+			break;
+		}
+		case 7: {
+			cout << "Не введено объем памяти(Гб)" << endl;
+			break;
+		case 8: {
+			cout << "Не введена скорость вращения" << endl;
+			break;
+		}
+		}
+		}
+	}
+	cout << endl;
+
+	system("pause");
+	return 0;
+}
